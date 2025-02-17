@@ -49,7 +49,6 @@ router.delete('/:categoryId', async (req, res) => {
 router.get('/:importId/categories', async (req, res) => {
   try {
     const { importId } = req.params;
-    const { websiteUrl } = req.query;
 
     const params = {
       TableName: process.env.CATEGORIES_TABLE!,

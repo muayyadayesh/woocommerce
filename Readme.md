@@ -11,6 +11,19 @@
 3. AWS CDK CLI installed
 4. Valid AWS credentials with appropriate permissions
 
+## API documentation
+- The openapi documentation can be found inside the docs directory
+
+## Sample Rrequests
+- Post a new import request:
+`/prod/categories`
+- Get import status:
+`/prod/imports/22dfd07a-07a7-4f9c-b117-bad45cd95fc2/status?websiteUrl=https://sooksync.io`
+- Get categories by importID:
+`/prod/imports/22dfd07a-07a7-4f9c-b117-bad45cd95fc2/categories?websiteUrl=https://sooksync.io`
+- Delete category by it's ID:
+`/prod/categories/99?websiteUrl=https://sooksync.io`
+
 ## Environment Setup
 
 1. Create a `.env` file in the root directory:
