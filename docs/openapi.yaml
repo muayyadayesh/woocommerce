@@ -1,0 +1,201 @@
+openapi: 1.0.0
+info:
+  title: WooCommerce Categories API
+  version: 1.0.0
+  description: |
+    API for managing WooCommerce product categories.
+    This API allows you to import, monitor, and manage product categories from WooCommerce stores.
+
+servers:
+  - url: https://api.example.com/v1
+    description: Production API server
+
+paths:
+  /categories:
+    post:
+      summary: Trigger category import
+      description: Initiates an asynchronous import of product categories from a WooCommerce store
+      operationId: triggerImport
+      tags:
+        - Import
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportRequest'
+      responses:
+        '202':
+          description: Import process initiated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /imports/{importId}/status:
+    get:
+      summary: Check import status
+      description: Retrieves the current status of an import process
+      operationId: checkImportStatus
+      tags:
+        - Import
+      parameters:
+        - name: importId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: websiteUrl
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uri
+      responses:
+        '200':
+          description: Import status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportStatus'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /categories/{categoryId}:
+    delete:
+      summary: Delete category
+      description: Deletes a specific product category
+      operationId: deleteCategory
+      tags:
+        - Categories
+      parameters:
+        - name: categoryId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: websiteUrl
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uri
+      responses:
+        '200':
+          description: Category deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+components:
+  schemas:
+    ImportRequest:
+      type: object
+      required:
+        - websiteUrl
+        - consumerKey
+        - consumerSecret
+      properties:
+        websiteUrl:
+          type: string
+          format: uri
+          description: WooCommerce store URL
+        consumerKey:
+          type: string
+          description: WooCommerce API consumer key
+        consumerSecret:
+          type: string
+          description: WooCommerce API consumer secret
+
+    ImportResponse:
+      type: object
+      properties:
+        importId:
+          type: string
+          description: Unique identifier for the import process
+        status:
+          type: string
+          enum: [pending]
+          description: Initial status of the import
+        message:
+          type: string
+          description: Success message
+
+    ImportStatus:
+      type: object
+      properties:
+        importId:
+          type: string
+        status:
+          type: string
+          enum: [pending, in-progress, completed, failed]
+        startTime:
+          type: string
+          format: date-time
+        lastUpdated:
+          type: string
+          format: date-time
+        categoriesCount:
+          type: integer
+        error:
+          type: string
+
+    DeleteResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        categoryId:
+          type: string
+        websiteUrl:
+          type: string
+          format: uri
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Unauthorized:
+      description: Invalid WooCommerce credentials
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    NotFound:
+      description: Requested resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
