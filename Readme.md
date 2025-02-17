@@ -159,6 +159,14 @@ Configured alerts for:
    - VPC endpoints (optional)
    - WAF protection (optional)
 
+
+## Real-world testings
+![alt text](raw/1.png)
+![alt text](raw/2.png)
+![alt text](raw/3.png)
+![alt text](raw/4.png)
+
+
 ## Cost Optimization
 - DynamoDB on-demand capacity
 - Lambda function configurations optimized
