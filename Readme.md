@@ -24,6 +24,13 @@
 - Delete category by it's ID:
 `/prod/categories/99?websiteUrl=https://sooksync.io`
 
+## Testing by Postman
+![alt text](raw/1.png)
+![alt text](raw/2.png)
+![alt text](raw/3.png)
+![alt text](raw/4.png)
+
+
 ## Environment Setup
 
 1. Create a `.env` file in the root directory:
